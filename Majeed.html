@@ -20,6 +20,7 @@
 
   body {
     min-height: 100vh;
+    min-height: 100dvh; /* FIX: keeps height on mobile/embedded views */
     display: grid;
     place-items: center;
     padding: 24px;
@@ -60,9 +61,16 @@
     font-size: 2rem; font-weight: 800; letter-spacing: 1px;
     color: #fff;
     border-radius: 50%;
+    overflow: hidden; /* FIX: clips the profile pic to the circle */
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     box-shadow: 0 0 0 6px rgba(79, 140, 255, 0.12), 0 14px 34px -8px rgba(79, 140, 255, 0.7);
     animation: pop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1);
+  }
+
+  .avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   @keyframes pop {
@@ -70,15 +78,22 @@
     to   { transform: scale(1); opacity: 1; }
   }
 
+  /* FIX: solid color fallback so the name is never invisible */
   .name {
     font-size: clamp(2.1rem, 8vw, 3.1rem);
     font-weight: 800;
     line-height: 1.1;
     letter-spacing: -0.02em;
-    background: linear-gradient(100deg, #ffffff 10%, #9db8ff 55%, #c4a8ff 95%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: #e8edf7;
+  }
+
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .name {
+      background: linear-gradient(100deg, #ffffff 10%, #9db8ff 55%, #c4a8ff 95%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
   }
 
   .tagline {
@@ -288,7 +303,11 @@
   <!-- ===== SCREEN 1: WELCOME ===== -->
   <section class="screen active" id="screen-welcome">
     <div class="welcome">
-      <div class="avatar" id="avatar">MK</div>
+      <div class="avatar" id="avatar">
+        <!-- FIX: profile pic. Swap this src with your own "commatozze.png" or URL. -->
+        <img id="avatarImg" alt="Majeed Khan"
+          src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%234f8cff'/><stop offset='1' stop-color='%238b5cf6'/></linearGradient></defs><rect width='100' height='100' fill='url(%23g)'/><circle cx='50' cy='38' r='16' fill='%23ffffff'/><path d='M18 92c4-18 16-28 32-28s28 10 32 28z' fill='%23ffffff'/></svg>" />
+      </div>
       <h1 class="name" id="welcomeName">Majeed Khan</h1>
       <p class="tagline">Youtube Account agreement Sign</p>
     </div>
@@ -431,7 +450,8 @@
   /* ------------------------------------------------------------------ */
   function init() {
     welcomeName.textContent = NAME;
-    avatar.textContent = initials(NAME);
+    // FIX: only set initials if there's no profile pic, so the pic isn't wiped
+    if (!avatar.querySelector("img")) avatar.textContent = initials(NAME);
     thanksName.textContent = NAME;
     document.title = `${NAME} -- Task Board`;
 
