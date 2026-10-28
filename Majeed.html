@@ -9,7 +9,6 @@
 
   :root {
     --bg: #0b0f1a;
-    --card: #101828;
     --line: rgba(255, 255, 255, 0.08);
     --text: #e8edf7;
     --muted: #8a94a8;
@@ -18,127 +17,77 @@
     --ok: #22c55e;
   }
 
+  html, body { background-color: var(--bg); }
+
   body {
     min-height: 100vh;
-    min-height: 100dvh; /* FIX: keeps height on mobile/embedded views */
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 24px;
     color: var(--text);
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background:
       radial-gradient(circle at 15% 0%, #1b2544 0%, transparent 55%),
       radial-gradient(circle at 85% 100%, #241b3f 0%, transparent 55%),
-      var(--bg);
+      #0b0f1a;
   }
 
   .card {
     width: 100%;
     max-width: 540px;
     padding: 36px 32px;
-    background: linear-gradient(160deg, #131c30 0%, #0d1424 100%);
+    background-color: #131c30;
+    background-image: linear-gradient(160deg, #131c30 0%, #0d1424 100%);
     border: 1px solid var(--line);
     border-radius: 22px;
     box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.8);
   }
 
-  /* ---------- screens ---------- */
-  .screen { display: none; }
-  .screen.active { display: block; animation: fadeUp 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  /* --- screens: ALL visible by default; JS hides inactive ones --- */
+  .screen { display: block; }
+  .screen + .screen { margin-top: 40px; }
+
+  html.js .screen { display: none; }
+  html.js .screen.active { display: block; animation: fadeUp 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  html.js .screen + .screen { margin-top: 0; }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ---------- welcome ---------- */
-  .welcome { text-align: center; padding: 16px 0 8px; }
+  /* --- welcome --- */
+  .welcome { text-align: center; padding: 8px 0; }
 
   .avatar {
     width: 84px; height: 84px;
     margin: 0 auto 22px;
-    display: grid; place-items: center;
-    font-size: 2rem; font-weight: 800; letter-spacing: 1px;
-    color: #fff;
     border-radius: 50%;
-    overflow: hidden; /* FIX: clips the profile pic to the circle */
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    overflow: hidden;
     box-shadow: 0 0 0 6px rgba(79, 140, 255, 0.12), 0 14px 34px -8px rgba(79, 140, 255, 0.7);
-    animation: pop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1);
   }
+  .avatar svg, .avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-  .avatar img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  @keyframes pop {
-    from { transform: scale(0.6); opacity: 0; }
-    to   { transform: scale(1); opacity: 1; }
-  }
-
-  /* FIX: solid color fallback so the name is never invisible */
   .name {
     font-size: clamp(2.1rem, 8vw, 3.1rem);
     font-weight: 800;
     line-height: 1.1;
     letter-spacing: -0.02em;
-    color: #e8edf7;
+    color: #ffffff;
   }
 
-  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
-    .name {
-      background: linear-gradient(100deg, #ffffff 10%, #9db8ff 55%, #c4a8ff 95%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-  }
+  .tagline { margin-top: 12px; color: var(--muted); font-size: 0.95rem; }
 
-  .tagline {
-    margin-top: 12px;
-    color: var(--muted);
-    font-size: 0.95rem;
-  }
-
-  /* ---------- tasks ---------- */
-  .header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 6px;
-  }
-
+  /* --- tasks --- */
+  .header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
   .title { font-size: 1.35rem; font-weight: 700; }
+  .counter { font-size: 0.8rem; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .subtitle { color: var(--muted); font-size: 0.88rem; margin-bottom: 20px; }
 
-  .counter {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--muted);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .subtitle {
-    color: var(--muted);
-    font-size: 0.88rem;
-    margin-bottom: 20px;
-  }
-
-  .progress {
-    height: 8px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.07);
-    overflow: hidden;
-    margin-bottom: 24px;
-  }
-
+  .progress { height: 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.07); overflow: hidden; margin-bottom: 24px; }
   .progress-fill {
-    height: 100%;
-    width: 0%;
-    border-radius: inherit;
+    height: 100%; width: 0%; border-radius: inherit;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
@@ -146,32 +95,26 @@
   .task-list { list-style: none; display: grid; gap: 10px; }
 
   .task {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+    display: flex; align-items: center; gap: 14px;
     padding: 14px 16px;
     border: 1px solid var(--line);
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.02);
     cursor: pointer;
-    transition: background 0.2s, border-color 0.2s, transform 0.15s;
     user-select: none;
+    transition: background 0.2s, border-color 0.2s;
   }
-
   .task:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.16); }
-  .task:active { transform: scale(0.99); }
 
   .task input { position: absolute; opacity: 0; width: 0; height: 0; }
 
   .box {
-    flex: 0 0 22px;
-    width: 22px; height: 22px;
+    flex: 0 0 22px; width: 22px; height: 22px;
     border-radius: 7px;
     border: 2px solid #39445e;
     display: grid; place-items: center;
     transition: background 0.2s, border-color 0.2s;
   }
-
   .box::after {
     content: "";
     width: 10px; height: 6px;
@@ -181,31 +124,22 @@
     transition: transform 0.18s cubic-bezier(0.2, 1.4, 0.4, 1);
     margin-top: -2px;
   }
-
   .task input:checked + .box {
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     border-color: transparent;
   }
-
   .task input:checked + .box::after { transform: rotate(-45deg) scale(1); }
 
-  .task input:focus-visible + .box { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-  .task-text { font-size: 0.94rem; transition: color 0.2s, opacity 0.2s; }
-
+  .task-text { font-size: 0.94rem; }
   .task input:checked ~ .task-text {
     color: var(--muted);
     text-decoration: line-through;
-    text-decoration-color: rgba(138, 148, 168, 0.6);
     opacity: 0.75;
   }
 
-  /* ---------- buttons ---------- */
+  /* --- buttons --- */
   .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
     width: 100%;
     padding: 14px 20px;
     margin-top: 26px;
@@ -216,32 +150,25 @@
     font-weight: 700;
     color: #fff;
     cursor: pointer;
+    background: #4f8cff;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     box-shadow: 0 12px 28px -10px rgba(79, 140, 255, 0.85);
-    transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+    transition: transform 0.15s, opacity 0.2s;
   }
-
-  .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 16px 34px -10px rgba(79, 140, 255, 0.95); }
-  .btn:active:not(:disabled) { transform: translateY(0) scale(0.99); }
-
-  .btn:disabled {
-    cursor: not-allowed;
-    opacity: 0.4;
-    box-shadow: none;
-  }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); }
+  .btn:disabled { cursor: not-allowed; opacity: 0.4; box-shadow: none; }
 
   .btn.ghost {
     background: transparent;
     border: 1px solid var(--line);
-    box-shadow: none;
     color: var(--muted);
     font-weight: 600;
+    box-shadow: none;
   }
+  .btn.ghost:hover { color: var(--text); }
 
-  .btn.ghost:hover { color: var(--text); border-color: rgba(255, 255, 255, 0.24); }
-
-  /* ---------- thanks ---------- */
-  .thanks { text-align: center; padding: 12px 0 4px; }
+  /* --- thanks --- */
+  .thanks { text-align: center; padding: 8px 0; }
 
   .check-ring {
     width: 96px; height: 96px;
@@ -250,45 +177,30 @@
     border-radius: 50%;
     background: rgba(34, 197, 94, 0.12);
     border: 2px solid rgba(34, 197, 94, 0.45);
-    animation: ring 0.7s cubic-bezier(0.2, 1.3, 0.4, 1);
   }
-
+  .check-ring svg { width: 46px; height: 46px; }
+  .check-ring path {
+    stroke: var(--ok); stroke-width: 5;
+    stroke-linecap: round; stroke-linejoin: round;
+    fill: none;
+  }
+  html.js .check-ring { animation: ring 0.7s cubic-bezier(0.2, 1.3, 0.4, 1); }
   @keyframes ring {
     0%   { transform: scale(0.4); opacity: 0; }
     60%  { transform: scale(1.08); opacity: 1; }
     100% { transform: scale(1); }
   }
-
-  .check-ring svg { width: 46px; height: 46px; }
-
-  .check-ring path {
-    stroke: var(--ok);
-    stroke-width: 5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    fill: none;
-    stroke-dasharray: 48;
-    stroke-dashoffset: 48;
+  html.js .check-ring path {
+    stroke-dasharray: 48; stroke-dashoffset: 48;
     animation: draw 0.5s 0.3s ease forwards;
   }
-
   @keyframes draw { to { stroke-dashoffset: 0; } }
 
-  .thanks h2 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 10px;
-  }
-
+  .thanks h2 { font-size: 1.75rem; font-weight: 800; margin-bottom: 10px; }
   .thanks p {
-    color: var(--muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    max-width: 38ch;
-    margin: 0 auto;
+    color: var(--muted); font-size: 0.95rem; line-height: 1.6;
+    max-width: 38ch; margin: 0 auto;
   }
-
   .thanks .highlight { color: var(--text); font-weight: 600; }
 
   @media (max-width: 420px) {
@@ -300,13 +212,22 @@
 
 <main class="card">
 
-  <!-- ===== SCREEN 1: WELCOME ===== -->
+  <!-- ===== WELCOME ===== -->
   <section class="screen active" id="screen-welcome">
     <div class="welcome">
-      <div class="avatar" id="avatar">
-        <!-- FIX: profile pic. Swap this src with your own "commatozze.png" or URL. -->
-        <img id="avatarImg" alt="Majeed Khan"
-          src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%234f8cff'/><stop offset='1' stop-color='%238b5cf6'/></linearGradient></defs><rect width='100' height='100' fill='url(%23g)'/><circle cx='50' cy='38' r='16' fill='%23ffffff'/><path d='M18 92c4-18 16-28 32-28s28 10 32 28z' fill='%23ffffff'/></svg>" />
+      <div class="avatar">
+        <!-- Inline SVG — always renders, no external file needed -->
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="ag" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#4f8cff"/>
+              <stop offset="1" stop-color="#8b5cf6"/>
+            </linearGradient>
+          </defs>
+          <rect width="100" height="100" fill="url(#ag)"/>
+          <circle cx="50" cy="38" r="16" fill="#ffffff"/>
+          <path d="M18 92c4-18 16-28 32-28s28 10 32 28z" fill="#ffffff"/>
+        </svg>
       </div>
       <h1 class="name" id="welcomeName">Majeed Khan</h1>
       <p class="tagline">Youtube Account agreement Sign</p>
@@ -314,24 +235,28 @@
     <button class="btn" id="startBtn">Get Started</button>
   </section>
 
-  <!-- ===== SCREEN 2: TASKS ===== -->
+  <!-- ===== TASKS (static in HTML — visible even without JS) ===== -->
   <section class="screen" id="screen-tasks">
     <div class="header">
       <h2 class="title">Sign below</h2>
-      <span class="counter" id="counter">0 / 0</span>
+      <span class="counter" id="counter">0 / 5</span>
     </div>
     <p class="subtitle">Check off each Line to, Che baya na yye .</p>
 
-    <div class="progress">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
+    <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
 
-    <ul class="task-list" id="taskList"></ul>
+    <ul class="task-list" id="taskList">
+      <li><label class="task"><input type="checkbox" data-task aria-label="Task 1"><span class="box"></span><span class="task-text">Account khabra start kam</span></label></li>
+      <li><label class="task"><input type="checkbox" data-task aria-label="Task 2"><span class="box"></span><span class="task-text">3 Check For acc agreement</span></label></li>
+      <li><label class="task"><input type="checkbox" data-task aria-label="Task 3"><span class="box"></span><span class="task-text">I'm agreed</span></label></li>
+      <li><label class="task"><input type="checkbox" data-task aria-label="Task 4"><span class="box"></span><span class="task-text">I'm agreed</span></label></li>
+      <li><label class="task"><input type="checkbox" data-task aria-label="Task 5"><span class="box"></span><span class="task-text">I'm agreed</span></label></li>
+    </ul>
 
     <button class="btn" id="finishBtn" disabled>Complete All Tasks</button>
   </section>
 
-  <!-- ===== SCREEN 3: THANKS ===== -->
+  <!-- ===== THANKS ===== -->
   <section class="screen" id="screen-thanks">
     <div class="thanks">
       <div class="check-ring">
@@ -352,129 +277,44 @@
 </main>
 
 <script>
-  /* ------------------------------------------------------------------ */
-  /*  Config                                                             */
-  /* ------------------------------------------------------------------ */
+  document.documentElement.classList.add("js");
+
   const NAME = "Majeed Khan";
+  document.getElementById("welcomeName").textContent = NAME;
+  document.getElementById("thanksName").textContent = NAME;
+  document.title = NAME + " -- Task Board";
 
-  const TASKS = [
-    "Account khabra start kam",
-    "3 Check For acc agreement",
-    "I'm agreed",
-    "I'm agreed",
-    "I'm agreed"
-  ];
+  const screens   = document.querySelectorAll(".screen");
+  const boxes     = document.querySelectorAll("[data-task]");
+  const counter   = document.getElementById("counter");
+  const progress  = document.getElementById("progressFill");
+  const finishBtn = document.getElementById("finishBtn");
 
-  /* ------------------------------------------------------------------ */
-  /*  Element refs                                                       */
-  /* ------------------------------------------------------------------ */
-  const screens     = document.querySelectorAll(".screen");
-  const welcomeName = document.getElementById("welcomeName");
-  const avatar      = document.getElementById("avatar");
-  const thanksName  = document.getElementById("thanksName");
-  const taskList    = document.getElementById("taskList");
-  const counter     = document.getElementById("counter");
-  const progress    = document.getElementById("progressFill");
-  const finishBtn   = document.getElementById("finishBtn");
-
-  /* ------------------------------------------------------------------ */
-  /*  Helpers                                                            */
-  /* ------------------------------------------------------------------ */
   function showScreen(id) {
-    screens.forEach((s) => s.classList.toggle("active", s.id === id));
+    screens.forEach(s => s.classList.toggle("active", s.id === id));
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function initials(fullName) {
-    return fullName
-      .trim()
-      .split(/\s+/)
-      .map((w) => w[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase();
-  }
-
-  /* ------------------------------------------------------------------ */
-  /*  Build the task list                                                */
-  /* ------------------------------------------------------------------ */
-  function renderTasks() {
-    taskList.innerHTML = "";
-
-    TASKS.forEach((text, i) => {
-      const li = document.createElement("li");
-
-      const label = document.createElement("label");
-      label.className = "task";
-
-      const input = document.createElement("input");
-      input.type = "checkbox";
-      input.id = `task-${i}`;
-      input.setAttribute("aria-label", text);
-
-      const box = document.createElement("span");
-      box.className = "box";
-
-      const span = document.createElement("span");
-      span.className = "task-text";
-      span.textContent = text;
-
-      label.append(input, box, span);
-      li.appendChild(label);
-      taskList.appendChild(li);
-
-      input.addEventListener("change", updateProgress);
-    });
-
-    updateProgress();
-  }
-
-  /* ------------------------------------------------------------------ */
-  /*  Progress + finish-button state                                     */
-  /* ------------------------------------------------------------------ */
   function updateProgress() {
-    const boxes = taskList.querySelectorAll('input[type="checkbox"]');
     const total = boxes.length;
     let done = 0;
-
-    boxes.forEach((b) => { if (b.checked) done++; });
-
-    const pct = total ? (done / total) * 100 : 0;
-    progress.style.width = pct + "%";
-    counter.textContent = `${done} / ${total}`;
+    boxes.forEach(b => { if (b.checked) done++; });
+    progress.style.width = (done / total * 100) + "%";
+    counter.textContent = done + " / " + total;
     finishBtn.disabled = done !== total;
   }
 
-  /* ------------------------------------------------------------------ */
-  /*  Wire up the flow                                                   */
-  /* ------------------------------------------------------------------ */
-  function init() {
-    welcomeName.textContent = NAME;
-    // FIX: only set initials if there's no profile pic, so the pic isn't wiped
-    if (!avatar.querySelector("img")) avatar.textContent = initials(NAME);
-    thanksName.textContent = NAME;
-    document.title = `${NAME} -- Task Board`;
+  boxes.forEach(b => b.addEventListener("change", updateProgress));
 
-    renderTasks();
-  }
-
-  document.getElementById("startBtn").addEventListener("click", () => {
-    showScreen("screen-tasks");
-  });
-
-  finishBtn.addEventListener("click", () => {
-    showScreen("screen-thanks");
-  });
-
+  document.getElementById("startBtn").addEventListener("click", () => showScreen("screen-tasks"));
+  finishBtn.addEventListener("click", () => showScreen("screen-thanks"));
   document.getElementById("restartBtn").addEventListener("click", () => {
-    taskList.querySelectorAll('input[type="checkbox"]').forEach((b) => {
-      b.checked = false;
-    });
+    boxes.forEach(b => { b.checked = false; });
     updateProgress();
     showScreen("screen-welcome");
   });
 
-  init();
+  updateProgress();
 </script>
 
 </body>
